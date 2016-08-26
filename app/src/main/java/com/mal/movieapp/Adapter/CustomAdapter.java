@@ -1,10 +1,8 @@
-package com.mal.movieapp;
+package com.mal.movieapp.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Movie;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.mal.movieapp.Activities.DetailActivity;
+import com.mal.movieapp.Movie_Pogo.Result;
+import com.mal.movieapp.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

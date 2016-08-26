@@ -1,32 +1,55 @@
-package com.mal.movieapp;
+package com.mal.movieapp.Activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
+import android.widget.GridView;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.github.florent37.picassopalette.PicassoPalette;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mal.movieapp.Adapter.CustomAdapter;
+import com.mal.movieapp.Adapter.TrailerAdapter;
+import com.mal.movieapp.Movie_Pogo.MovieModel;
+import com.mal.movieapp.R;
+import com.mal.movieapp.Movie_Pogo.Result;
+import com.mal.movieapp.Trailer_Pogo.TrailerDeserializer;
+import com.mal.movieapp.Trailer_Pogo.Trailers;
 import com.squareup.picasso.Picasso;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+
+import se.emilsjolander.flipview.FlipView;
 
 public class DetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener{
 
@@ -51,6 +74,13 @@ public class DetailActivity extends AppCompatActivity implements AppBarLayout.On
     private AppBarLayout mAppBarLayout;
     private Toolbar mToolbar;
 
+    RecyclerView recyclerView;
+    StringRequest stringRequest;
+    public final String LOG_TAG = MainFragment.class.getSimpleName();
+    List<com.mal.movieapp.Trailer_Pogo.Result> arrlist;
+    TrailerAdapter adapter;
+
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +91,12 @@ public class DetailActivity extends AppCompatActivity implements AppBarLayout.On
         getSupportActionBar().hide();
 
 
-
         Intent i = getIntent();
         this.movie = (Result) i.getSerializableExtra("movie");
+        recyclerView=(RecyclerView) findViewById(R.id.listview_trailer);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(llm);
 
         this.setTitle(movie.getTitle());
         this.getSupportActionBar().setIcon(R.drawable.icon);
@@ -93,27 +126,98 @@ public class DetailActivity extends AppCompatActivity implements AppBarLayout.On
                         .intoBackground(findViewById(R.id.main_framelayout_title)).
                         intoBackground(findViewById(R.id.main_toolbar))
 
-                                .intoBackground(findViewById(R.id.scroller))
+                        .intoBackground(findViewById(R.id.scroller))
         );
-        bindActivity();
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+
+        // Construct the URL for the OpenWeatherMap query
+        // Possible parameters are available at OWM's forecast API page, at
+        // http://openweathermap.org/API#forecast
+
+
+        Uri.Builder builder = new Uri.Builder();
+        Uri builtUri = builder.scheme("https")
+                .authority("api.themoviedb.org")
+                .appendPath("3")
+                .appendPath("movie")
+                .appendPath(movie.getId() + "")
+                .appendPath("videos")
+                .appendQueryParameter("api_key", "5ad0957e90e39700ef64ee586d98e080")
+                .build();
+        try {
+            URL url2 = new URL(builtUri.toString());
+            Log.v(LOG_TAG, url2.toString());
+
+            String url = url2.toString();
+            stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+
+                @Override
+                public void onResponse(String res) {
+
+
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.registerTypeAdapter(Trailers.class, new TrailerDeserializer());
+
+                    Gson gson = gsonBuilder.create();
+
+                    Trailers trailersItem = gson.fromJson(res, Trailers.class);
+
+                    arrlist = trailersItem.getResults();
+
+                    System.out.println(arrlist.size());
+
+                    adapter = new TrailerAdapter(DetailActivity.this,arrlist);
+                    recyclerView.setAdapter(adapter);
+
+
+
+
+                }
+
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError err) {
+                    Toast.makeText(DetailActivity.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                    Log.e(LOG_TAG, err.getMessage() + "   ERRRRROORRRR");
+
+                }
+            });
+
+            requestQueue.add(stringRequest);
+
+
+        } catch (MalformedURLException e1) {
+
+            e1.printStackTrace();
+        }
+
+      ;
+
+            bindActivity();
+
         mAppBarLayout.addOnOffsetChangedListener(this);
-        mTitle.setText(movie.getTitle());
-        mToolbar.inflateMenu(R.menu.menu_main);
-        startAlphaAnimation(mTitle, 0, View.INVISIBLE);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+            mTitle.setText(movie.getTitle());
+            mToolbar.inflateMenu(R.menu.menu_main);
+            startAlphaAnimation(mTitle, 0, View.INVISIBLE);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //onBackPressed()
-               finish();
-            }
-        });
-    }
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //onBackPressed()
+                    finish();
+                }
+            });
+        }
+
 
     private void bindActivity() {
         mToolbar        = (Toolbar) findViewById(R.id.main_toolbar);

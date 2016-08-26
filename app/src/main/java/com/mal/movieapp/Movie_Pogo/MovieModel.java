@@ -1,5 +1,5 @@
 
-package com.mal.movieapp;
+package com.mal.movieapp.Movie_Pogo;
 
 import java.util.ArrayList;
 import java.util.HashMap;

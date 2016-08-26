@@ -1,12 +1,10 @@
-package com.mal.movieapp;
+package com.mal.movieapp.Activities;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.GridView;
 
-import java.util.ArrayList;
+import com.mal.movieapp.R;
 
 public class MainActivity extends AppCompatActivity {
 

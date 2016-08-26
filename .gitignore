@@ -6,8 +6,9 @@
 /.idea/libraries
 .DS_Store
 /build
-/captures
+captures
 .externalNativeBuild
+
 
 # Built application files
 *.apk

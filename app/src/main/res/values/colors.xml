@@ -7,4 +7,5 @@
     <color name="red">#EB2B36</color>
     <color name="card_white">#90ffffff</color>
     <color name="card_shadow">#90bdbdbd</color>
+    <color name="transparent">#00bdbdbd</color>
 </resources>

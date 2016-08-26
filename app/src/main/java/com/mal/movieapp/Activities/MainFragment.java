@@ -1,13 +1,10 @@
-package com.mal.movieapp;
+package com.mal.movieapp.Activities;
 
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 //import android.support.v4.app.Fragment;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,9 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ShareActionProvider;
 //import android.support.v4.app.Fragment;
 import android.app.Fragment;
 import android.widget.Toast;
@@ -31,11 +26,13 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mal.movieapp.Adapter.CustomAdapter;
+import com.mal.movieapp.Movie_Pogo.MovieModel;
 import com.mal.movieapp.R;
+import com.mal.movieapp.Movie_Pogo.Result;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -214,8 +211,8 @@ public class MainFragment extends Fragment {
                 URL url2 = new URL(builtUri.toString());
                 Log.v(LOG_TAG, url2.toString());
 
-                String url=url2.toString();
-                stringRequest = new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
+                String url = url2.toString();
+                stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
                     @Override
                     public void onResponse(String res) {
@@ -223,18 +220,21 @@ public class MainFragment extends Fragment {
 
                         Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
                         MovieModel movieItem = gson.fromJson(res, MovieModel.class);
+                        try {
+                            arrlist.clear();
+                            for (int i = 0; i < movieItem.getResults().size(); i++) {
+                                Result movie = movieItem.getResults().get(i);
+                                arrlist.add(movie);
 
-                        arrlist.clear();
-                       for(int i=0;i<movieItem.getResults().size();i++){
-                           Result movie= movieItem.getResults().get(i);
-                           arrlist.add(movie);
+                            }
+
+                            adapter.notifyDataSetChanged();
+                        }
+                        catch(NullPointerException e2){
+
+                            Toast.makeText(getActivity(), "ERROR: Could Not Repopulate View \nPlease Recreate View By Rotating The Screen \nOr Re-Starting The App!!", Toast.LENGTH_LONG).show();
 
                         }
-                        Toast.makeText(getActivity(),movieItem.getResults().get(0).getTitle()+"ello",Toast.LENGTH_LONG);
-
-                        adapter.notifyDataSetChanged();
-
-
 
 
                     }
@@ -244,16 +244,17 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError err) {
                         Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_SHORT).show();
-                        Log.e(LOG_TAG,err.getMessage() +"   ERRRRROORRRR");
+                        Log.e(LOG_TAG, err.getMessage() + "   ERRRRROORRRR");
 
                     }
                 });
 
                 requestQueue.add(stringRequest);
+            }
 
 
 
-            } catch (MalformedURLException e1) {
+             catch (MalformedURLException e1) {
                 e1.printStackTrace();
             }
 
@@ -300,20 +301,23 @@ public class MainFragment extends Fragment {
                             Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
                             MovieModel movieItem = gson.fromJson(res, MovieModel.class);
 
+                            try {
+                                arrlist.clear();
+                                for (int i = 0; i < movieItem.getResults().size(); i++) {
+                                    Result movie = movieItem.getResults().get(i);
+                                    arrlist.add(movie);
 
-                            arrlist.clear();
-                            for(int i=0;i<movieItem.getResults().size();i++){
-                                Result movie= movieItem.getResults().get(i);
-                                arrlist.add(movie);
+                                }
+
+                                adapter.notifyDataSetChanged();
+
+
+                            } catch (NullPointerException e2) {
+
+                                Toast.makeText(getActivity(), "ERROR: Could Not Repopulate View \nPlease Recreate View By Rotating The Screen \nOr Re-Starting The App!!", Toast.LENGTH_LONG).show();
 
                             }
-                            Toast.makeText(getActivity(), movieItem.getResults().get(0).getTitle() + "ello", Toast.LENGTH_LONG);
-
-                            adapter.notifyDataSetChanged();
-
-
                         }
-
                     }, new Response.ErrorListener() {
 
                         @Override
@@ -327,7 +331,9 @@ public class MainFragment extends Fragment {
                     requestQueue.add(stringRequest);
 
 
-                } catch (MalformedURLException e1) {
+                }
+
+                               catch (MalformedURLException e1) {
                     e1.printStackTrace();
                 }
 

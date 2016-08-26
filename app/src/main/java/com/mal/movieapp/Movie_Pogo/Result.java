@@ -1,5 +1,5 @@
 
-package com.mal.movieapp;
+package com.mal.movieapp.Movie_Pogo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,13 +29,13 @@ public class Result implements Serializable {
 
     /**
      * No args constructor for use in serialization
-     * 
+     *
      */
     public Result() {
     }
 
     /**
-     * 
+     *
      * @param id
      * @param genreIds
      * @param title
@@ -69,7 +69,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The posterPath
      */
@@ -78,7 +78,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param posterPath
      *     The poster_path
      */
@@ -87,7 +87,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The adult
      */
@@ -96,7 +96,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param adult
      *     The adult
      */
@@ -105,7 +105,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The overview
      */
@@ -114,7 +114,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param overview
      *     The overview
      */
@@ -123,7 +123,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The releaseDate
      */
@@ -132,7 +132,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param releaseDate
      *     The release_date
      */
@@ -141,7 +141,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The genreIds
      */
@@ -150,7 +150,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param genreIds
      *     The genre_ids
      */
@@ -159,7 +159,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The id
      */
@@ -168,7 +168,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param id
      *     The id
      */
@@ -177,7 +177,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The originalTitle
      */
@@ -186,7 +186,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param originalTitle
      *     The original_title
      */
@@ -195,7 +195,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The originalLanguage
      */
@@ -204,7 +204,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param originalLanguage
      *     The original_language
      */
@@ -213,7 +213,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The title
      */
@@ -222,7 +222,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param title
      *     The title
      */
@@ -231,7 +231,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The backdropPath
      */
@@ -240,7 +240,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param backdropPath
      *     The backdrop_path
      */
@@ -249,7 +249,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The popularity
      */
@@ -258,7 +258,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param popularity
      *     The popularity
      */
@@ -267,7 +267,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The voteCount
      */
@@ -276,7 +276,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param voteCount
      *     The vote_count
      */
@@ -285,7 +285,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The video
      */
@@ -294,7 +294,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param video
      *     The video
      */
@@ -303,7 +303,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      *     The voteAverage
      */
@@ -312,7 +312,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param voteAverage
      *     The vote_average
      */

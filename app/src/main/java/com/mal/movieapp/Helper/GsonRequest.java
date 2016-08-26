@@ -1,4 +1,4 @@
-package com.mal.movieapp;
+package com.mal.movieapp.Helper;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;

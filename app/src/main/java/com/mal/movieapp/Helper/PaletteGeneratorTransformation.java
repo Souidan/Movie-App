@@ -1,4 +1,4 @@
-package com.mal.movieapp;
+package com.mal.movieapp.Helper;
 
 import android.graphics.Bitmap;
 import android.support.v7.graphics.Palette;
