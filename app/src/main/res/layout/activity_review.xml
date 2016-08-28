@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/reviewsBckg"
+
+    >
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:title="hello work"
+
+        ></android.support.v7.widget.Toolbar>
+    <ImageView
+        android:id="@+id/heroImageView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="fitCenter" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="#9E9E9E"
+        android:dividerHeight="1dp"
+        android:scrollbars="none"></ListView>
+
+
+    <TextView
+        android:id="@+id/stickyView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#222"
+        android:gravity="center_vertical"
+        android:paddingLeft="30dp"
+        android:text="Reviews"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:textStyle="bold"
+
+        />
+
+    <ImageButton
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/ic_arrow_back_48px_128"
+        android:paddingTop="30dp"
+
+
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="4dp"
+        android:id="@+id/imageButton2"
+        android:layout_alignBottom="@+id/stickyView"
+
+        />
+
+
+</RelativeLayout>
