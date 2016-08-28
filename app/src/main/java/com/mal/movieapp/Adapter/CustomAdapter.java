@@ -33,6 +33,7 @@ public class CustomAdapter extends BaseAdapter {
         // TODO Auto-generated constructor stub
         results=r;
         context=mainActivity;
+
         //imageId=prgmImages;
         inflater = ( LayoutInflater )context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);

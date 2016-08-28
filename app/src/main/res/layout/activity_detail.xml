@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:ignore="RtlHardcoded"
     >
 
@@ -87,6 +88,7 @@
                         android:id="@+id/movie_rating"
                         android:layout_below="@id/movie_date"
                         android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
                         android:layout_centerInParent="true"
 
 
@@ -182,13 +184,30 @@
 
             />
 
+       <ImageButton
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:background="@drawable/read_review_button"
+           android:layout_below="@id/listview_trailer"
+           android:layout_centerInParent="true"
+           android:paddingBottom="30dp"
+           android:id="@+id/reviewsBtn"
+
+           />
+
+
+
 
         </RelativeLayout>
 
 
 
 
+
+
     </android.support.v4.widget.NestedScrollView>
+
+
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/main.toolbar"

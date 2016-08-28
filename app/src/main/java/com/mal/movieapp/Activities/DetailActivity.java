@@ -14,12 +14,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,11 +39,16 @@ import com.github.florent37.picassopalette.PicassoPalette;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 import com.mal.movieapp.Adapter.CustomAdapter;
+import com.mal.movieapp.Adapter.ReviewAdapter;
 import com.mal.movieapp.Adapter.TrailerAdapter;
+import com.mal.movieapp.Database.Movie;
 import com.mal.movieapp.Movie_Pogo.MovieModel;
 import com.mal.movieapp.R;
 import com.mal.movieapp.Movie_Pogo.Result;
+import com.mal.movieapp.Review_Pogo.Reviews;
 import com.mal.movieapp.Trailer_Pogo.TrailerDeserializer;
 import com.mal.movieapp.Trailer_Pogo.Trailers;
 import com.squareup.picasso.Picasso;
@@ -49,7 +57,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import se.emilsjolander.flipview.FlipView;
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 
 public class DetailActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener{
 
@@ -61,6 +71,7 @@ public class DetailActivity extends AppCompatActivity implements AppBarLayout.On
     TextView ratingBar;
     TextView movie_date;
     TextView movieOverview;
+    Realm realm;
 
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR  = 0.9f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS     = 0.3f;
@@ -73,11 +84,18 @@ public class DetailActivity extends AppCompatActivity implements AppBarLayout.On
     private TextView mTitle;
     private AppBarLayout mAppBarLayout;
     private Toolbar mToolbar;
+    ImageButton imgBtn;
+
+    LikeButton likeButton;
+
+
 
     RecyclerView recyclerView;
     StringRequest stringRequest;
     public final String LOG_TAG = MainFragment.class.getSimpleName();
     List<com.mal.movieapp.Trailer_Pogo.Result> arrlist;
+
+
     TrailerAdapter adapter;
 
 
@@ -90,6 +108,9 @@ public class DetailActivity extends AppCompatActivity implements AppBarLayout.On
         setContentView(R.layout.activity_detail);
         getSupportActionBar().hide();
 
+        realm = Realm.getDefaultInstance();
+
+        likeButton= (LikeButton)findViewById(R.id.star_button);
 
         Intent i = getIntent();
         this.movie = (Result) i.getSerializableExtra("movie");
@@ -97,6 +118,8 @@ public class DetailActivity extends AppCompatActivity implements AppBarLayout.On
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(llm);
+
+
 
         this.setTitle(movie.getTitle());
         this.getSupportActionBar().setIcon(R.drawable.icon);
@@ -106,6 +129,17 @@ public class DetailActivity extends AppCompatActivity implements AppBarLayout.On
         movieOverview = (TextView) findViewById(R.id.movie_overview);
         movie_date = (TextView) findViewById(R.id.movie_date);
         ratingBar = (TextView) findViewById(R.id.movie_rating);
+        imgBtn=(ImageButton) findViewById(R.id.reviewsBtn);
+        imgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(DetailActivity.this,ReviewActivity.class);
+                i.putExtra("movie", movie);
+                DetailActivity.this.startActivity(i);
+
+            }
+        });
 
 
         System.out.println(movie.getReleaseDate() + " Date");
@@ -195,18 +229,85 @@ public class DetailActivity extends AppCompatActivity implements AppBarLayout.On
             e1.printStackTrace();
         }
 
-      ;
+
+
+        RealmResults<Movie> result2 = realm.where(Movie.class)
+                .equalTo("movie_id", movie.getId())
+                .findAll();
+
+        if(result2.size()>0){
+            likeButton.setLiked(true);
+        }else{
+            likeButton.setLiked(false);
+        }
+
 
             bindActivity();
 
         mAppBarLayout.addOnOffsetChangedListener(this);
             mTitle.setText(movie.getTitle());
-            mToolbar.inflateMenu(R.menu.menu_main);
+        mToolbar.inflateMenu(R.menu.menu_main);
             startAlphaAnimation(mTitle, 0, View.INVISIBLE);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+
+        likeButton.setOnLikeListener(new OnLikeListener() {
+
+
+            @Override
+            public void liked(LikeButton likeButton) {
+
+
+
+                       realm.beginTransaction();
+
+
+                        Movie movieRealm = realm.createObject(Movie.class);
+                        movieRealm.movie_id=movie.getId();
+                        movieRealm.title=movie.getTitle();
+                        movieRealm.poster_path=movie.getPosterPath();
+                        movieRealm.overview=movie.getOverview();
+                        movieRealm.date=movie.getReleaseDate();
+                        movieRealm.rating=movie.getVoteAverage();
+                        movieRealm.backdrop=movie.getBackdropPath();
+
+                        realm.commitTransaction();
+
+
+
+
+
+                Toast.makeText(DetailActivity.this, "Movie Added To Favorites", Toast.LENGTH_SHORT).show();
+
+
+
+
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+
+                    try {
+                        RealmResults<Movie> results = realm.where(Movie.class).equalTo("movie_id", movie.getId()).findAll();
+
+                       realm.beginTransaction();
+                        results.deleteAllFromRealm();
+                        Toast.makeText(DetailActivity.this, "Not a favorite", Toast.LENGTH_SHORT).show();
+                    }catch (Exception e){
+                        Log.e("Realm Error", "error" ,e);
+                    }finally {
+                        realm.commitTransaction();
+                    }
+
+
+
+
+            }
+        });
 
 
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -298,6 +399,31 @@ public class DetailActivity extends AppCompatActivity implements AppBarLayout.On
         alphaAnimation.setDuration(duration);
         alphaAnimation.setFillAfter(true);
         v.startAnimation(alphaAnimation);
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(
+                listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+
+        View view = null;
+
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(
+                        desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 }
 
