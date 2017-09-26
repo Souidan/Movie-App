@@ -1,24 +1,15 @@
-package com.mal.movieapp.Adapter;
+package com.mal.movieapp.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.mal.movieapp.Activities.DetailActivity;
 import com.mal.movieapp.R;
-import com.mal.movieapp.Review_Pogo.Result;
-import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
+import com.mal.movieapp.reviewpogo.Result;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,15 +23,15 @@ public class ReviewAdapter extends BaseAdapter {
 
     Context context;
     List<Result> results = new ArrayList<Result>();
-    private static LayoutInflater inflater=null;
+    private static LayoutInflater inflater = null;
 
 
     public ReviewAdapter(Activity activity, List r) {
         // TODO Auto-generated constructor stub
-        results=r;
-        context=activity;
+        results = r;
+        context = activity;
         System.out.println("chck A");
-        inflater = ( LayoutInflater )context.
+        inflater = (LayoutInflater) context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
@@ -58,24 +49,21 @@ public class ReviewAdapter extends BaseAdapter {
 
     public View getView(final int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
-        ReviewAdapter.Holder holder=new ReviewAdapter.Holder();
+        ReviewAdapter.Holder holder = new ReviewAdapter.Holder();
         View rowView;
 
         rowView = inflater.inflate(R.layout.list_item_review, null);
 
-        holder.author =  (TextView) rowView.findViewById(R.id.author);
-        holder.content = (TextView)  rowView.findViewById(R.id.content);
-        holder.url = (TextView)  rowView.findViewById(R.id.url);
+        holder.author = (TextView) rowView.findViewById(R.id.author);
+        holder.content = (TextView) rowView.findViewById(R.id.content);
+        holder.url = (TextView) rowView.findViewById(R.id.url);
 
-        holder.author.setText(results.get(position).getAuthor()+" Says: ");
+        holder.author.setText(results.get(position).getAuthor() + " Says: ");
         holder.content.setText(results.get(position).getContent());
         holder.url.setText(results.get(position).getUrl());
 
         return rowView;
     }
-
-
-
 
 
     @Override
@@ -84,15 +72,12 @@ public class ReviewAdapter extends BaseAdapter {
         return position;
     }
 
-    public class Holder
-    {
+    public class Holder {
         TextView author;
         TextView content;
         TextView url;
 
     }
-
-
 
 
 }

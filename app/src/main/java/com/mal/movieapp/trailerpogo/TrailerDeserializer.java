@@ -1,4 +1,4 @@
-package com.mal.movieapp.Trailer_Pogo;
+package com.mal.movieapp.trailerpogo;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -6,8 +6,6 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-
-import org.json.JSONArray;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

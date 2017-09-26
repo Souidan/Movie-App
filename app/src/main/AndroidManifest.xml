@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".Activities.MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,16 +23,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.DetailActivity"
+            android:name=".activities.DetailActivity"
             android:label="Movie Detail"
-            android:parentActivityName=".Activities.MainActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activities.MainActivity" />
+                android:value=".activities.MainActivity" />
             >
         </activity>
-        <activity android:name=".Activities.ReviewActivity"></activity>
+        <activity android:name=".activities.ReviewActivity"></activity>
     </application>
 
 </manifest>
