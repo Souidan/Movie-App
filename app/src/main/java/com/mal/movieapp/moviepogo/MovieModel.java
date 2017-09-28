@@ -1,11 +1,10 @@
 
-package com.mal.movieapp.Movie_Pogo;
+package com.mal.movieapp.moviepogo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 
 public class MovieModel {
@@ -16,13 +15,11 @@ public class MovieModel {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public MovieModel() {
     }
 
     /**
-     * 
      * @param results
      * @param page
      */
@@ -32,41 +29,32 @@ public class MovieModel {
     }
 
     /**
-     * 
-     * @return
-     *     The page
+     * @return The page
      */
     public Integer getPage() {
         return page;
     }
 
     /**
-     * 
-     * @param page
-     *     The page
+     * @param page The page
      */
     public void setPage(Integer page) {
         this.page = page;
     }
 
     /**
-     * 
-     * @return
-     *     The results
+     * @return The results
      */
     public List<Result> getResults() {
         return results;
     }
 
     /**
-     * 
-     * @param results
-     *     The results
+     * @param results The results
      */
     public void setResults(List<Result> results) {
         this.results = results;
     }
-
 
 
     public Map<String, Object> getAdditionalProperties() {

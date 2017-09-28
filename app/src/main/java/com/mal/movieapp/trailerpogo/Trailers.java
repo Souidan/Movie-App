@@ -1,22 +1,8 @@
 
-package com.mal.movieapp.Trailer_Pogo; ;
+package com.mal.movieapp.trailerpogo; ;
 
-import android.text.TextUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.reflect.TypeToken;
-import com.mal.movieapp.Trailer_Pogo.Result;
 
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 

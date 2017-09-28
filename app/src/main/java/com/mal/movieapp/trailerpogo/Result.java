@@ -1,8 +1,5 @@
 
-package com.mal.movieapp.Trailer_Pogo; ;
-
-import javax.annotation.Generated;
-
+package com.mal.movieapp.trailerpogo; ;
 
 
 public class Result {

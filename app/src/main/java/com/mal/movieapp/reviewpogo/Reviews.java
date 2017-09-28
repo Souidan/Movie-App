@@ -1,11 +1,10 @@
 
-package com.mal.movieapp.Review_Pogo;
+package com.mal.movieapp.reviewpogo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Generated;
 
 
 public class Reviews {
@@ -19,13 +18,11 @@ public class Reviews {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Reviews() {
     }
 
     /**
-     * 
      * @param id
      * @param results
      * @param totalResults
@@ -41,90 +38,70 @@ public class Reviews {
     }
 
     /**
-     * 
-     * @return
-     *     The id
+     * @return The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
-     * @param id
-     *     The id
+     * @param id The id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     * 
-     * @return
-     *     The page
+     * @return The page
      */
     public Integer getPage() {
         return page;
     }
 
     /**
-     * 
-     * @param page
-     *     The page
+     * @param page The page
      */
     public void setPage(Integer page) {
         this.page = page;
     }
 
     /**
-     * 
-     * @return
-     *     The results
+     * @return The results
      */
     public List<Result> getResults() {
         return results;
     }
 
     /**
-     * 
-     * @param results
-     *     The results
+     * @param results The results
      */
     public void setResults(List<Result> results) {
         this.results = results;
     }
 
     /**
-     * 
-     * @return
-     *     The totalPages
+     * @return The totalPages
      */
     public Integer getTotalPages() {
         return totalPages;
     }
 
     /**
-     * 
-     * @param totalPages
-     *     The total_pages
+     * @param totalPages The total_pages
      */
     public void setTotalPages(Integer totalPages) {
         this.totalPages = totalPages;
     }
 
     /**
-     * 
-     * @return
-     *     The totalResults
+     * @return The totalResults
      */
     public Integer getTotalResults() {
         return totalResults;
     }
 
     /**
-     * 
-     * @param totalResults
-     *     The total_results
+     * @param totalResults The total_results
      */
     public void setTotalResults(Integer totalResults) {
         this.totalResults = totalResults;

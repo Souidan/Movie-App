@@ -1,19 +1,22 @@
-package com.mal.movieapp.Activities;
+package com.mal.movieapp.activities;
 
-import android.content.Context;
+
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,22 +28,20 @@ import com.github.florent37.picassopalette.PicassoPalette;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mal.movieapp.Adapter.ReviewAdapter;
+import com.mal.movieapp.adapter.ReviewAdapter;
 import com.mal.movieapp.R;
-import com.mal.movieapp.Review_Pogo.Reviews;
-import com.mal.movieapp.Trailer_Pogo.Result;
+import com.mal.movieapp.reviewpogo.Result;
+import com.mal.movieapp.reviewpogo.Reviews;
 import com.squareup.picasso.Picasso;
-
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-
-public class ReviewActivity extends AppCompatActivity {
-
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class ReviewFragment extends Fragment {
 
     private TextView stickyView;
     private ListView listView;
@@ -48,43 +49,43 @@ public class ReviewActivity extends AppCompatActivity {
     private View stickyViewSpacer;
     ImageButton backbtn;
     private int MAX_ROWS = 20;
-    com.mal.movieapp.Movie_Pogo.Result movie;
+    com.mal.movieapp.moviepogo.Result movie;
 
 
     RecyclerView recyclerView;
     StringRequest stringRequest;
     public final String LOG_TAG = MainFragment.class.getSimpleName();
-    List<com.mal.movieapp.Review_Pogo.Result> reviewarrlist;
+    ProgressDialog pDialog;
+
+    List<Result> reviewarrlist;
+
+
+    public ReviewFragment() {
+        // Required empty public constructor
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_review);
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP){
-            // Do something for lollipop and above versions
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_review, container, false);
 
 
-        } else{
-            // do something for phones running an SDK before lollipop
-        }
+        Intent i = getActivity().getIntent();
 
-        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
-        getSupportActionBar().hide();
-        Intent i = getIntent();
-
-        this.movie = (com.mal.movieapp.Movie_Pogo.Result) i.getSerializableExtra("movie");
+        this.movie = (com.mal.movieapp.moviepogo.Result) i.getSerializableExtra("movie");
 
 
         /* Initialise list view, hero image, and sticky view */
-        listView = (ListView) findViewById(R.id.listView);
-        backbtn =(ImageButton) findViewById(R.id.imageButton2) ;
-        heroImageView = (ImageView) findViewById(R.id.heroImageView);
-        stickyView = (TextView) findViewById(R.id.stickyView);
+        listView = (ListView) v.findViewById(R.id.listView);
+        backbtn = (ImageButton) v.findViewById(R.id.imageButton2);
+        heroImageView = (ImageView) v.findViewById(R.id.heroImageView);
+        stickyView = (TextView) v.findViewById(R.id.stickyView);
         /* Inflate list header layout */
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View listHeader = inflater.inflate(R.layout.list_header_layout, null);
         stickyViewSpacer = listHeader.findViewById(R.id.stickyViewPlaceholder);
+        pDialog = new ProgressDialog(getActivity());
         /* Add list view header */
         listView.addHeaderView(listHeader);
         /* Handle list View scroll events */
@@ -113,19 +114,23 @@ public class ReviewActivity extends AppCompatActivity {
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+
+                getActivity().finish();
             }
         });
 
-        Picasso.with(this).load("http://image.tmdb.org/t/p/w370" + movie.getBackdropPath()).placeholder(R.drawable.progress_animation).into(heroImageView,
+        // Showing progress dialog before making http request
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+
+        Picasso.with(getActivity()).load("http://image.tmdb.org/t/p/w370" + movie.getBackdropPath()).placeholder(R.drawable.progress_animation).into(heroImageView,
                 PicassoPalette.with("http://image.tmdb.org/t/p/w370" + movie.getPosterPath(), heroImageView)
                         .use(PicassoPalette.Profile.VIBRANT_DARK)
-                        .intoBackground(findViewById(R.id.reviewsBckg)).intoBackground(findViewById(R.id.stickyView))
+                        .intoBackground(v.findViewById(R.id.reviewsBckg)).intoBackground(v.findViewById(R.id.stickyView))
         );
 
 
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
 
         // Construct the URL for the OpenWeatherMap query
@@ -138,7 +143,7 @@ public class ReviewActivity extends AppCompatActivity {
                 .authority("api.themoviedb.org")
                 .appendPath("3")
                 .appendPath("movie")
-                .appendPath(movie.getId()+ "")
+                .appendPath(movie.getId() + "")
                 .appendPath("reviews")
                 .appendQueryParameter("api_key", "5ad0957e90e39700ef64ee586d98e080")
                 .build();
@@ -147,6 +152,15 @@ public class ReviewActivity extends AppCompatActivity {
 
             String url = url2.toString();
             stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+
+                ProgressDialog getpBar() {
+                    return pDialog;
+                }
+
+                void setpBar(ProgressDialog pbar) {
+                    pDialog = pbar;
+                }
+
 
                 @Override
                 public void onResponse(String res) {
@@ -161,16 +175,18 @@ public class ReviewActivity extends AppCompatActivity {
 
                     System.out.println(reviewarrlist.size());
 
-                    if(reviewarrlist.size()==0){
-                        Toast.makeText(ReviewActivity.this, "No Movie Reviews Have Been Added To "+movie.getTitle(), Toast.LENGTH_LONG).show();
+                    if (reviewarrlist.size() == 0) {
+                        Toast.makeText(getActivity(), "No Movie Reviews Have Been Added To " + movie.getTitle(), Toast.LENGTH_LONG).show();
 
                     }
 
 
-                    ReviewAdapter reviewsadapter = new ReviewAdapter(ReviewActivity.this,reviewarrlist);
+                    ReviewAdapter reviewsadapter = new ReviewAdapter(getActivity(), reviewarrlist);
                     listView.setAdapter(reviewsadapter);
-
-
+                    if (pDialog != null) {
+                        pDialog.dismiss();
+                        pDialog = null;
+                    }
 
 
                 }
@@ -179,8 +195,12 @@ public class ReviewActivity extends AppCompatActivity {
 
                 @Override
                 public void onErrorResponse(VolleyError err) {
-                    Toast.makeText(ReviewActivity.this, "Connection Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Connection Error", Toast.LENGTH_SHORT).show();
                     Log.e(LOG_TAG, err.getMessage() + "   ERRRRROORRRR");
+                    if (pDialog != null) {
+                        pDialog.dismiss();
+                        pDialog = null;
+                    }
 
                 }
             });
@@ -192,13 +212,9 @@ public class ReviewActivity extends AppCompatActivity {
 
             e1.printStackTrace();
         }
-
-
-
-
-
-
-
+        return v;
 
     }
+
+
 }
