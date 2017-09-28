@@ -91,9 +91,7 @@ public class MainFragment extends Fragment {
         System.out.println(type + "typee");
         if (type.equals("fav")) {
             movieOps = new MovieOperations(getActivity());
-            movieOps.open();
             movies = movieOps.getAllMovies();
-            movieOps.close();
 
 
             Movie[] array = (movies.toArray(new Movie[movies.size()]));
@@ -453,9 +451,7 @@ public class MainFragment extends Fragment {
             arrlist.clear();
 
             movieOps = new MovieOperations(getActivity());
-            movieOps.open();
             movies = movieOps.getAllMovies();
-            movieOps.close();
 
 
             Movie[] array = (movies.toArray(new Movie[movies.size()]));
@@ -638,9 +634,7 @@ public class MainFragment extends Fragment {
                     arrlist.clear();
 
                     movieOps = new MovieOperations(getActivity());
-                    movieOps.open();
                     movies = movieOps.getAllMovies();
-                    movieOps.close();
 
                     Movie[] array = (movies.toArray(new Movie[movies.size()]));
                     Result rslt;

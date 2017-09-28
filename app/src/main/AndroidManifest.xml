@@ -33,6 +33,14 @@
             >
         </activity>
         <activity android:name=".activities.ReviewActivity"></activity>
+
+        <provider
+            android:authorities="com.mal.movieapp"
+            android:name=".MoviesProvider"
+            android:exported="true"
+            android:readPermission="com.mal.movieapp.READ_DATABASE"
+            android:writePermission="com.mal.movieapp.WRITE_DATABASE"
+            />
     </application>
 
 </manifest>

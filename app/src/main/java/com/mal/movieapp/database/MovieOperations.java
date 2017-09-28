@@ -9,15 +9,24 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.util.Log;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MovieOperations {
     public static final String LOGTAG = "MVE_MNGMNT_SYS";
     SQLiteOpenHelper dbhandler;
-    SQLiteDatabase database;
+
+    private static final String AUTHORITY = "com.mal.movieapp";
+    private static final String BASE_PATH = "movies";
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH );
+    private static final int MOVIES = 100;
+    private static final int MOVIE_ID = 101;
+    Context context;
+
 
     private static final String[] allColumns = {
             MovieDBHandler.COLUMN_ID,
@@ -31,21 +40,11 @@ public class MovieOperations {
     };
 
     public MovieOperations(Context context) {
+        this.context=context;
         dbhandler = new MovieDBHandler(context);
     }
 
-    public void open() {
-        Log.i(LOGTAG, "Database Opened");
-        database = dbhandler.getWritableDatabase();
 
-
-    }
-
-    public void close() {
-        Log.i(LOGTAG, "Database Closed");
-        dbhandler.close();
-
-    }
    /* MovieDBHandler.COLUMN_ID,
     MovieDBHandler.COLUMN_TITLE,
     MovieDBHandler.COLUMN_MOVIE_ID,
@@ -55,7 +54,7 @@ public class MovieOperations {
     MovieDBHandler.COLUMN_OVERVIEW,
     MovieDBHandler.COLUMN_RATING*/
 
-    public Movie addMovie(Movie movie) {
+    public Uri addMovie(Movie movie) {
         ContentValues values = new ContentValues();
         values.put(MovieDBHandler.COLUMN_TITLE, movie.getTitle());
         values.put(MovieDBHandler.COLUMN_OVERVIEW, movie.getOverview());
@@ -65,15 +64,18 @@ public class MovieOperations {
         values.put(MovieDBHandler.COLUMN_BACKDROP, movie.getBackdrop());
         values.put(MovieDBHandler.COLUMN_MOVIE_ID, movie.getMovieId());
 
-        long insertid = database.insert(MovieDBHandler.TABLE_MOVIES, null, values);
-        movie.setId(insertid);
-        return movie;
+       Uri uri= context.getContentResolver().insert(CONTENT_URI,values);
+
+
+
+        return uri;
 
     }
 
     public Movie getMovie(long id) {
 
-        Cursor cursor = database.query(MovieDBHandler.TABLE_MOVIES, allColumns, MovieDBHandler.COLUMN_MOVIE_ID + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
+        Uri uri = Uri.withAppendedPath(CONTENT_URI,""+id);
+        Cursor cursor = context.getContentResolver().query(uri, allColumns, null, null,  null);
         if (cursor != null)
             cursor.moveToFirst();
         if (cursor.getCount() == 0)
@@ -94,7 +96,7 @@ public class MovieOperations {
 
     public List<Movie> getAllMovies() {
 
-        Cursor cursor = database.query(MovieDBHandler.TABLE_MOVIES, allColumns, null, null, null, null, null);
+        Cursor cursor = context.getContentResolver().query(CONTENT_URI, allColumns, null, null,  null);
 
         List<Movie> movies = new ArrayList<>();
         if (cursor.getCount() > 0) {
@@ -119,8 +121,9 @@ public class MovieOperations {
 
 
     public void removeMovie(Movie movie) {
+        Uri uri = Uri.withAppendedPath(CONTENT_URI,""+movie.getMovieId());
 
-        database.delete(MovieDBHandler.TABLE_MOVIES, MovieDBHandler.COLUMN_MOVIE_ID + "=" + movie.getMovieId(), null);
+        context.getContentResolver().delete(uri,""+ movie.getMovieId(), null);
     }
 }
 

@@ -23,6 +23,15 @@ public class MovieDBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_POSTER_PATH = "posterPath";
     public static final String COLUMN_BACKDROP = "backDrop";
     public static final String COLUMN_MOVIE_ID = "movieId";
+    public static final String[] ALL_COLUMNS =
+            {COLUMN_ID ,
+                    COLUMN_TITLE ,
+                    COLUMN_OVERVIEW ,
+                    COLUMN_RATING ,
+                    COLUMN_MOVIE_ID ,
+                    COLUMN_DATE ,
+                    COLUMN_POSTER_PATH ,
+                    COLUMN_BACKDROP };
 
     private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_MOVIES + " (" +
